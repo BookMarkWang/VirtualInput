@@ -1,0 +1,7 @@
+主要用来模拟/获取linux系统中的输入信息。
+1. 模拟linux系统中所有按键的操作。
+2. 模拟linux系统中鼠标操作。
+3. 获取linux系统中的按键操作。
+4. 获取linux系统中鼠标操作。
+
+used to capture/silumate linux system input event(like keyboard, mouse).
