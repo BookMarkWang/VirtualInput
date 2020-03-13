@@ -13,7 +13,7 @@ int input_simulate(int fd, uint16_t type, uint16_t code, int32_t value)
     event.value = value;
     gettimeofday(&event.time, 0);
 
-    if (write(fd, &event, sizeof(event)) < 0)
+    if (write(fd, &event, sizeof(struct input_event)) < 0)
     {
         TRACE_ERROR("input simulate error, error is %s", strerror(errno));
         return -1;

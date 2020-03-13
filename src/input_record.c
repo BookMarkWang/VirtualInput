@@ -41,56 +41,56 @@ int main(int argc, char* argv[])
 {
 	int c;
 	int long_index = 0;
-    uint32_t mode=0, loop = 1 , interval = 100;
-    uint16_t type, code;
-    int32_t value;
-    int dev_fd=-1, file_fd=-1;
-    char* file = NULL, *device=NULL;
-    bool is_type_set=false, is_code_set=false, is_value_set=false;
+	uint32_t mode=0, loop = 1 , interval = 100;
+	uint16_t type, code;
+	int32_t value;
+	int dev_fd=-1, file_fd=-1;
+	char* file = NULL, *device=NULL;
+	bool is_type_set=false, is_code_set=false, is_value_set=false;
 	static struct option long_opts[] = {
 		{ "mode", required_argument, NULL, 'm' },
-        { "type", required_argument, NULL, 't' },
-        { "code", required_argument, NULL, 'c' },
-        { "value", required_argument, NULL, 'v' },
-        { "file", required_argument, NULL, 'f' },
-        { "loop", required_argument, NULL, 'l' },
-        { "interval", required_argument, NULL, 'i' },
+		{ "type", required_argument, NULL, 't' },
+		{ "code", required_argument, NULL, 'c' },
+		{ "value", required_argument, NULL, 'v' },
+		{ "file", required_argument, NULL, 'f' },
+		{ "loop", required_argument, NULL, 'l' },
+		{ "interval", required_argument, NULL, 'i' },
 		{ "version", no_argument, NULL, 'V' },
 		{ "help", no_argument, NULL, 'h' },
 		{ 0, 0, 0, 0}
-	};
+		};
 
-	while( (c = getopt_long(argc, argv, "m:t:c:v:f:Vh", long_opts, &long_index)) != -1)
+	while( (c = getopt_long(argc, argv, "m:t:c:v:f:l:i:Vh", long_opts, &long_index)) != -1)
 	{
 		switch(c)
 		{
 		case 0:
 			break;
-        case 'm':
-            mode = atoi(optarg);
-            break;
-        case 't':
-            is_type_set = true;
-            type = atoi(optarg);
-            if(type < 0)
-            {
-                TRACE_ERROR("Wrong type %d.", type);
-                return -1;
-            }
-            break;
-        case 'c':
-            is_code_set = true;
-            code = atoi(optarg);
-            if(code < 0)
-            {
-                TRACE_ERROR("Wrong code %d.", code);
-                return -1;
-            }
-            break;
-        case 'v':
-            is_value_set = true;
-            value = atoi(optarg);
-            break;
+		case 'm':
+           		 mode = atoi(optarg);
+            		break;
+		case 't':
+			is_type_set = true;
+			type = atoi(optarg);
+			if(type < 0)
+			{
+				TRACE_ERROR("Wrong type %d.", type);
+				return -1;
+			}
+			break;
+		case 'c':
+			is_code_set = true;
+			code = atoi(optarg);
+			if(code < 0)
+			{
+				TRACE_ERROR("Wrong code %d.", code);
+				return -1;
+			}
+			break;
+		case 'v':
+			is_value_set = true;
+			value = atoi(optarg);
+			break;
 		case 'f':
 			file = strdup(optarg);
 			break;
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 
     if(file)
     {
-        file_fd = open(file, O_RDWR);
+        file_fd = open(file, O_RDWR | O_CREAT);
         if(dev_fd <= 0)
         {
             TRACE_ERROR("error open files %s, error is %s!", file, strerror(errno));
@@ -179,7 +179,6 @@ int main(int argc, char* argv[])
             struct input_event event;
             while(!input_capture(dev_fd, &event))
             {
-                TRACE_LOG("type=%d, code=%d, value=%d\n", event.type, event.code, event.value);
                 if (file_fd > 0 && write(file_fd, &event, sizeof(event)) < 0)
                 {
                     TRACE_ERROR("record event to file failed, error is %s!", strerror(errno));
@@ -193,7 +192,7 @@ int main(int argc, char* argv[])
             while(loop--)
             {
                 struct input_event event;
-                while(read(file_fd, &event, sizeof(event)==sizeof(event)))
+                while(read(file_fd, &event, sizeof(event))==sizeof(event))
                 {
                     if(input_simulate(dev_fd, event.type, event.code, event.value))
                     {
@@ -209,7 +208,7 @@ int main(int argc, char* argv[])
         TRACE_ERROR("Unsupport mode %d!", mode);
         break;
     }
-    close(dev_fd);
-    if(file_fd > 0)close(file_fd);
+	close(dev_fd);
+	if(file_fd > 0)close(file_fd);
 	return 0;
 }
