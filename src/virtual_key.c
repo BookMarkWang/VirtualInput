@@ -71,6 +71,7 @@ void write_to_files_with_fd(int fd, int* fd_array, int fd_num)
         //TRACE_LOG("type(%d), code(%d), value(%d)", event.type, event.code, event.value);
         if(EV_KEY == event.type)
             TRACE_LOG("key(%s) %s", key_str[event.code], event.value==1?"Pressed":(event.value==2?"Long Pressed":"Released"));
+        gettimeofday(&event.time, 0);
         write_to_files_with_buf((char*)&event, sizeof(struct input_event), fd_array, fd_num);
     }
 }
@@ -199,6 +200,7 @@ int main(int argc, char* argv[])
         TRACE_LOG("%s", help_msg);
     }
 
+    TRACE_LOG("loop is %d", loop);
     for(int i = 0; i < from_num; ++i)
     {
         TRACE_LOG("From_list[%d]=%s", i, from_list[i]);
@@ -258,7 +260,11 @@ int main(int argc, char* argv[])
                     break;
                 case S_IFLNK:
                 case S_IFREG:
-                    write_to_files_with_fd(from_fds[i], to_fds, to_num);
+                    for(int k = 0; k < loop; ++k)
+                    {
+                        write_to_files_with_fd(from_fds[i], to_fds, to_num);
+                        lseek(from_fds[i], SEEK_SET, 0);
+                    }
                     break;
                 default: printf("unknown?\n"); break;
                 }
@@ -276,9 +282,12 @@ int main(int argc, char* argv[])
         TRACE_LOG("to_fds[%d]=%d, key_num=%d", i, to_fds[i], key_num);
         if(to_fds[i] > 0)
         {
-            for(int j = 0; j < key_num; ++j)
+            for(int k = 0; k < loop; ++k)//loop
             {
-                key_str_simulate(to_fds[i], key_list[j]);
+                for(int j = 0; j < key_num; ++j)
+                {
+                    key_str_simulate(to_fds[i], key_list[j]);
+                }
             }
         }
     }
