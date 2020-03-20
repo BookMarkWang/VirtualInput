@@ -6,12 +6,12 @@ CC_OBJ = $(addprefix $(BUILD_PATH)/c/, $(SRC_C:.c=.o)) \
 all : $(CC_OBJ)
 	@echo $(CC_SRC)
 	-@echo linking: $(LD_BIN)
-	$(LN) -o $(LD_BIN) $(CC_OBJ) $(LD_INC) $(LD_LIB)
+	$(LN) -o $(LD_BIN) $(CC_OBJ) $(LD_INC) $(LD_LIB) $(FLAG_$(LD_OBJ)) 
 
 $(BUILD_PATH)/c/%.o : %.c
 	@mkdir -p $(BUILD_PATH)/c/$(dir $<)
 	-@echo "> $<";
-	@$(CC) $(FLAG_CC) $(CC_INC) -o $@ -c $<
+	$(CC) $(FLAG_CC) $(CC_INC) -o $@ -c $<
 
 $(BUILD_PATH)/cpp/%.o : %.cpp
 	@mkdir -p $(BUILD_PATH)/cpp/$(dir $<)
