@@ -5,3 +5,25 @@
 4. 获取linux系统中鼠标操作。
 
 used to capture/silumate linux system input event(like keyboard, mouse).
+
+virtin:
+
+
+
+
+
+
+
+
+
+
+
+virtkey:
+	1. read event from a file and simulate it
+		sudo ./virtkey -f a.bin -t /dev/input/event1
+	2. capture event from keyboard device
+		sudo ./virtkey -f  /dev/input/event1
+	3. simulate with human-readable string, and write the event to keyboard device and a file
+		sudo ./virtkey -k a ctrl+c -t /dev/input/event1 a.bin
+	4. simulate with human-readable string, and only write the event to keyboard device
+	sudo ./virtkey -k a ctrl+c -t /dev/input/event1
