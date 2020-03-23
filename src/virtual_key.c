@@ -19,7 +19,7 @@ bool g_running = true;
 char* help_msg = 
 "\
 SYNOPSIS:\n\
-	virtkey [OPT] devices\n\
+    virtkey [OPT] devices\n\
 OPTIONS:\n\
     virtkey can be used capture/simulate key info from/to devices or files.\n\
     -f, --from\n\
@@ -92,24 +92,24 @@ void sig_handle(int sig,siginfo_t *info,void *t)
 
 int main(int argc, char* argv[])
 {
-	int c;
-	int long_index = 0;
-	uint32_t loop = 1 , interval = 100;
-	int from_fds[MAX_FILE_NUM]={-1}, to_fds[MAX_FILE_NUM]={-1};
+    int c;
+    int long_index = 0;
+    uint32_t loop = 1 , interval = 100;
+    int from_fds[MAX_FILE_NUM]={-1}, to_fds[MAX_FILE_NUM]={-1};
     char* from_list[MAX_FILE_NUM] = {NULL};
     char* to_list[MAX_FILE_NUM] = {NULL};
     char* key_list[MAX_FILE_NUM] = {NULL};
     int from_num = 0, to_num=0, key_num=0;
-	static struct option long_opts[] = {
-		{ "from", required_argument, NULL, 'f' },
-		{ "to", required_argument, NULL, 't' },
-		{ "key", required_argument, NULL, 'f' },
-		{ "loop", required_argument, NULL, 'l' },
-		{ "interval", required_argument, NULL, 'i' },
-		{ "version", no_argument, NULL, 'V' },
-		{ "help", no_argument, NULL, 'h' },
-		{ 0, 0, 0, 0}
-		};
+    static struct option long_opts[] = {
+        { "from", required_argument, NULL, 'f' },
+        { "to", required_argument, NULL, 't' },
+        { "key", required_argument, NULL, 'f' },
+        { "loop", required_argument, NULL, 'l' },
+        { "interval", required_argument, NULL, 'i' },
+        { "version", no_argument, NULL, 'V' },
+        { "help", no_argument, NULL, 'h' },
+        { 0, 0, 0, 0}
+        };
 
     struct sigaction act;
     act.sa_sigaction = sig_handle;
@@ -118,12 +118,12 @@ int main(int argc, char* argv[])
     sigaction(SIGINT,&act,NULL);
     sigaction(SIGQUIT,&act,NULL);
 
-	while( (c = getopt_long(argc, argv, "f:t:k:l:i:Vh", long_opts, &long_index)) != -1)
-	{
-		switch(c)
-		{
-		case 0:
-			break;
+    while( (c = getopt_long(argc, argv, "f:t:k:l:i:Vh", long_opts, &long_index)) != -1)
+    {
+        switch(c)
+        {
+        case 0:
+            break;
         case 'f':
             from_list[from_num++] = optarg;
             while(optind < argc )
@@ -178,23 +178,23 @@ int main(int argc, char* argv[])
                 return -1;
             }
             break;
-		case 'V':
-			TRACE_LOG("version %s", VERSION);
-			return 0;
-		case 'h':
-			TRACE_LOG("%s", help_msg);
-			return 0;
+        case 'V':
+            TRACE_LOG("version %s", VERSION);
+            return 0;
+        case 'h':
+            TRACE_LOG("%s", help_msg);
+            return 0;
         case ':':
             TRACE_LOG("No argument for option %s", argv[optind]);
             break;
         case '?':
             TRACE_LOG("Unknown option %s", argv[optind]);
             break;
-		default:
-			TRACE_LOG("%s", help_msg);
-			return 0;
-		}
-	}
+        default:
+            TRACE_LOG("%s", help_msg);
+            return 0;
+        }
+    }
     if(1 == optind)
     {
         TRACE_LOG("%s", help_msg);
@@ -325,5 +325,5 @@ int main(int argc, char* argv[])
         }
     }
     close(epoll_fd);
-	return 0;
+    return 0;
 }
